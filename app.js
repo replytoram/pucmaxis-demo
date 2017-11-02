@@ -43,8 +43,8 @@ var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
 //const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
-const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=480&spellCheck=true&q='
-//     'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=0&q='
+const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=480&spellCheck=true&q=';
+//     'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=0&q=';
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
@@ -99,7 +99,7 @@ intents.matches('check_plan', [
             { listStyle: builder.ListStyle.button });
     }, function (session, results, next) {
         var msg = new builder.Message(session);
-        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.attachmentLayout(builder.AttachmentLayout.carousel);
         msg.attachments([
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Light.png')])
@@ -132,7 +132,7 @@ intents.matches('check_plan', [
             { listStyle: builder.ListStyle.button });
     }, function (session, results, next) {
         var msg = new builder.Message(session);
-        msg.text("Based on your choices, the best plan for you is the 30 Mbps plan")
+        msg.text("Based on your choices, the best plan for you is the 30 Mbps plan");
         msg.attachmentLayout(builder.AttachmentLayout.carousel)
         msg.attachments([
             new builder.HeroCard(session)
@@ -154,8 +154,8 @@ intents.matches('check_plan', [
         if (results.response.entity === 'Yes')  { next(); }
         else {
         var msg = new builder.Message(session);
-        msg.text("Select location from map")
-        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.text("Select location from map");
+        msg.attachmentLayout(builder.AttachmentLayout.carousel);
         msg.attachments([
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location.png')])
@@ -172,7 +172,7 @@ intents.matches('check_plan', [
         else {
         var msg = new builder.Message(session);
         msg.text("Great news, you can get MaxisONE Home Broadband! This means you'll enjoy the fastest speed available in your area");
-        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.attachmentLayout(builder.AttachmentLayout.carousel);
         msg.attachments([
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location_confirmation.png')])
@@ -195,7 +195,7 @@ intents.matches('check_plan', [
 ]).endConversationAction("stop",
     "Conversation Closed. Please start over",
     {
-        matches: /^cancel$|^goodbye$|^exit|^stop|^close/i,
+        matches: /^cancel$|^goodbye$|^exit|^stop|^close/i
         // confirmPrompt: "This will cancel your order. Are you sure?"
     }
 );;
@@ -245,7 +245,7 @@ intents.matches('share_line_plan', [
         matches: /^cancel$|^goodbye$|^exit|^stop|^close/i,
         // confirmPrompt: "This will cancel your progress?"
     }
-);;
+);
 
 
 intents.matches('compare_plan',(session) => {
