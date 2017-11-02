@@ -240,7 +240,7 @@ intents.matches('share_line_plan', [
     }
 
 ]).endConversationAction("stop",
-    "Conversation Closed. Please start over",
+    "Conversation Closed. Please start over again",
     {
         matches: /^cancel$|^goodbye$|^exit|^stop|^close/i,
         // confirmPrompt: "This will cancel your progress?"
