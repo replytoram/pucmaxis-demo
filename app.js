@@ -4,7 +4,7 @@ A simple echo bot for the Microsoft Bot Framework.
 
 var restify = require('restify');
 var builder = require('botbuilder');
-// var zChat = require('./zopim-web-sdk.js');
+//var zChat = require('./zopim-web-sdk.js');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -15,14 +15,14 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
 // zChat.init({
 //     account_key: '5CovnPf4dwlM7U3jaOKzzIOVR1vFT1P6'
 // });  
-  
+
 // zChat.on('connection_update', function(status) {
 //     session.send("TEST").endDialog();
 //     if (status === 'connected') {
 //          session.send("TEST").endDialog();
 //     }
 // });  
-  
+
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
     appId: process.env.MicrosoftAppId,
@@ -38,22 +38,20 @@ server.post('/api/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
 
 // Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
+var luisAppId = 'bb5ee332-8ce7-466a-b5d7-46724b99c3b2'; //process.env.LuisAppId;
+var luisAPIKey = '861ce67b4a1a4f1bb28c77b8e6d701e6'; //process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
-const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=480&spellCheck=true&q=';
-//     'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&staging=true&verbose=true&timezoneOffset=0&q=';
-// Main dialog with LUIS
+//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&spellCheck=true&verbose=true&timezoneOffset=0&q=';
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .onDefault((session) => {
-    session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-// var connection_status = zChat.getConnectionStatus();
-// session.send(connection_status);
+        session.send('Sorry, I did not understand \'%s\'', session.message.text);
+        // var connection_status = zChat.getConnectionStatus();
+        // session.send(connection_status);
 
-});
+    });
 
 
 bot.on('conversationUpdate', function (activity) {
@@ -72,11 +70,11 @@ bot.on('conversationUpdate', function (activity) {
 
 bot.dialog('/', intents);
 
-intents.matches('Intent_Name_dummy',(session) => {
+intents.matches('Intent_Name_dummy', (session) => {
     session.send("Response_dummy").endDialog();
 });
 
-intents.matches('30_mbps',(session) => {
+intents.matches('OfferQuery', (session) => {
     var msg = new builder.Message(session);
     msg.attachmentLayout(builder.AttachmentLayout.carousel)
     msg.attachments([
@@ -84,14 +82,14 @@ intents.matches('30_mbps',(session) => {
             .title("30_MBPS Plan")
             .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Plan30Mbps.png')])
             .buttons([
-            builder.CardAction.imBack(session, "Signup now", "Signup")
-        ])
+                builder.CardAction.imBack(session, "Signup now", "Signup")
+            ])
     ]);
     session.send(msg).endDialog();
 });
 
 
-intents.matches('check_plan', [
+intents.matches('PlanQuery', [
     function (session, args, next) {
         builder.Prompts.choice(session,
             'No worries. Let me help you to personalize your MaxisONE Home Broadband. Do you want MaxisONE Go WiFi?',
@@ -104,23 +102,23 @@ intents.matches('check_plan', [
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Light.png')])
                 .buttons([
-                builder.CardAction.imBack(session, "Light", "Light")
-            ]),
+                    builder.CardAction.imBack(session, "Light", "Light")
+                ]),
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Moderate.png')])
                 .buttons([
-                builder.CardAction.imBack(session, "Moderate", "Moderate")
-            ]),
+                    builder.CardAction.imBack(session, "Moderate", "Moderate")
+                ]),
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Heavy.png')])
                 .buttons([
-                builder.CardAction.imBack(session, "Heavy", "Heavy")
-            ]),
+                    builder.CardAction.imBack(session, "Heavy", "Heavy")
+                ]),
             new builder.HeroCard(session)
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Extreme.png')])
                 .buttons([
-                builder.CardAction.imBack(session, "Extreme", "Extreme")
-            ])
+                    builder.CardAction.imBack(session, "Extreme", "Extreme")
+                ])
         ]);
 
         builder.Prompts.text(session, msg, { maxRetries: 1 });
@@ -139,8 +137,8 @@ intents.matches('check_plan', [
                 .title("30_MBPS Plan")
                 .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Plan30Mbps.png')])
                 .buttons([
-                builder.CardAction.imBack(session, "Check Availability", "Check Availability", { maxRetries: 1 })
-            ])
+                    builder.CardAction.imBack(session, "Check Availability", "Check Availability", { maxRetries: 1 })
+                ])
         ]);
         builder.Prompts.text(session, msg);
     }, function (session, results, next) {
@@ -149,46 +147,46 @@ intents.matches('check_plan', [
             ["Yes", "No, I will provide alternate address"],
             { listStyle: builder.ListStyle.button }, { maxRetries: 1 });
     },
-     function (session, results, next) {
+    function (session, results, next) {
         // session.send(results.response.entity);
-        if (results.response.entity === 'Yes')  { next(); }
+        if (results.response.entity === 'Yes') { next(); }
         else {
-        var msg = new builder.Message(session);
-        msg.text("Select location from map");
-        msg.attachmentLayout(builder.AttachmentLayout.carousel);
-        msg.attachments([
-            new builder.HeroCard(session)
-                .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location.png')])
-                .buttons([
-                builder.CardAction.imBack(session, "Select", "Select")
-            ])
-        ]);
-        builder.Prompts.text(session, msg, { maxRetries: 1 });
+            var msg = new builder.Message(session);
+            msg.text("Select location from map");
+            msg.attachmentLayout(builder.AttachmentLayout.carousel);
+            msg.attachments([
+                new builder.HeroCard(session)
+                    .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location.png')])
+                    .buttons([
+                        builder.CardAction.imBack(session, "Select", "Select")
+                    ])
+            ]);
+            builder.Prompts.text(session, msg, { maxRetries: 1 });
         }
     },
-         function (session, results, next) {
+    function (session, results, next) {
         //  session.send(results.response.entity);
-        if (!results.response)  { next(); }
+        if (!results.response) { next(); }
         else {
-        var msg = new builder.Message(session);
-        msg.text("Great news, you can get MaxisONE Home Broadband! This means you'll enjoy the fastest speed available in your area");
-        msg.attachmentLayout(builder.AttachmentLayout.carousel);
-        msg.attachments([
-            new builder.HeroCard(session)
-                .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location_confirmation.png')])
-                .buttons([
-                builder.CardAction.imBack(session, "Get It Now!", "Get It Now")
-            ])
-        ]);
-       // builder.Prompts.text(session, msg, { maxRetries: 1 });
-       session.send(msg).endDialog();
+            var msg = new builder.Message(session);
+            msg.text("Great news, you can get MaxisONE Home Broadband! This means you'll enjoy the fastest speed available in your area");
+            msg.attachmentLayout(builder.AttachmentLayout.carousel);
+            msg.attachments([
+                new builder.HeroCard(session)
+                    .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/location_confirmation.png')])
+                    .buttons([
+                        builder.CardAction.imBack(session, "Get It Now!", "Get It Now")
+                    ])
+            ]);
+            // builder.Prompts.text(session, msg, { maxRetries: 1 });
+            session.send(msg).endDialog();
         }
     },
     function (session, args, next) {
         builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
     }, function (session, args, next) {
         builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxRetries: 1 });
-    },function (session, results) {
+    }, function (session, results) {
         session.send("Thank you, your request is registered.");
         session.endDialog();
     }
@@ -198,10 +196,10 @@ intents.matches('check_plan', [
         matches: /^cancel$|^goodbye$|^exit|^stop|^close/i
         // confirmPrompt: "This will cancel your order. Are you sure?"
     }
-);;
+    );;
 ;
 
-intents.matches('share_line_plan', [
+intents.matches('SharedLinePlanAdditionQuery', [
     function (session, args, next) {
         const msg = new builder.Message(session);
         msg.text("At the heart of it, we believe in something simple. We can get you sign up MaxisONE Share right away with your current MaxisONE Plan 188.Refer to our FAQs below. Watch how to share your data across family lines and multiple devices with DataPool here. Enjoy MaxisONE Share Line with 10GB and Unlimited Calls for RM48/mth. You will get 5GB for your DataPool and another 5GB for 4G weekends.");
@@ -217,16 +215,16 @@ intents.matches('share_line_plan', [
     }, function (session, args, next) {
         builder.Prompts.choice(session,
             'Can I confirm activation?',
-            ["Yes"], 
+            ["Yes"],
             { listStyle: builder.ListStyle.button }, { maxRetries: 1 });
     }, function (session, args, next) {
-       if (args.response.entity === 'Yes')  { 
-                             //session.beginDialog("lousyspeed");
-        builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
-       } else {
-                       //session.beginDialog("lousyspeed");
-        builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
-       }
+        if (args.response.entity === 'Yes') {
+            //session.beginDialog("lousyspeed");
+            builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
+        } else {
+            //session.beginDialog("lousyspeed");
+            builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
+        }
     }, function (session, args, next) {
         builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxRetries: 1 });
     }, function (session, args, next) {
@@ -245,23 +243,23 @@ intents.matches('share_line_plan', [
         matches: /^cancel$|^goodbye$|^exit|^stop|^close/i,
         // confirmPrompt: "This will cancel your progress?"
     }
-);
+    );
 
 
-intents.matches('compare_plan',(session) => {
+intents.matches('PlanComparisonQuery', (session) => {
     var msg = new builder.Message(session);
     msg.attachmentLayout(builder.AttachmentLayout.carousel)
     msg.attachments([
         new builder.HeroCard(session)
             .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/30mbps_plan_com.png')])
             .buttons([
-            builder.CardAction.imBack(session, "availability", "Check availability")
-        ]),
+                builder.CardAction.imBack(session, "availability", "Check availability")
+            ]),
         new builder.HeroCard(session)
             .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/30mbps_lite_plan.png')])
             .buttons([
-            builder.CardAction.imBack(session, "availability", "Check availability")
-        ])
+                builder.CardAction.imBack(session, "availability", "Check availability")
+            ])
     ]);
     session.send(msg).endDialog();
 });
@@ -270,16 +268,16 @@ bot.dialog('help', function (session, args, next) {
     //Send a help message
     session.endDialog("Type exit/cancel anytime to leave a conversation");
 })
-// Once triggered, will start a new dialog as specified by
-// the 'onSelectAction' option.
-.triggerAction({
-    matches: /^help$/i,
-    onSelectAction: (session, args, next) => {
-        // Add the help dialog to the top of the dialog stack 
-        // (override the default behavior of replacing the stack)
-        session.beginDialog(args.action, args);
-    }
-});
+    // Once triggered, will start a new dialog as specified by
+    // the 'onSelectAction' option.
+    .triggerAction({
+        matches: /^help$/i,
+        onSelectAction: (session, args, next) => {
+            // Add the help dialog to the top of the dialog stack 
+            // (override the default behavior of replacing the stack)
+            session.beginDialog(args.action, args);
+        }
+    });
 
 // bot.dialog('lousyspeed', [
 //  function (session, args, next) {

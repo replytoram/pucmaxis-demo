@@ -1,11 +1,11 @@
 {
   "name": "luisbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "1. make code change in the online editor",
   "main": "index.js",
   "dependencies": {
-    "botbuilder": "^3.8.4",
-    "restify": "^5.0.0"
+    "botbuilder": "^3.11.0",
+    "restify": "^5.2.0"
   },
   "devDependencies": {
     "request": "^2.81.0",
@@ -15,5 +15,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/replytoram/pucmaxis-demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/replytoram/pucmaxis-demo/issues"
+  },
+  "homepage": "https://github.com/replytoram/pucmaxis-demo#readme"
 }
