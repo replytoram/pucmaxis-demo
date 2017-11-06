@@ -300,7 +300,7 @@ bot.dialog('lousyspeed', [
         builder.Prompts.choice(session,
             'confirm the dates?',
             ["confirm"],
-            { listStyle: builder.Liststyle.button }, { maxretries: 1 });
+            { listStyle: builder.ListStyle.button }, { maxretries: 1 });
     }, function (session, args) {
         session.send("thank you, your request is registered.");
         session.endDialog();
