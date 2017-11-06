@@ -53,7 +53,6 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 
     });
 
-
 bot.on('conversationUpdate', function (activity) {
     // when user joins conversation, send welcome message
     if (activity.membersAdded) {
@@ -79,15 +78,14 @@ intents.matches('OfferQuery', (session) => {
     msg.attachmentLayout(builder.AttachmentLayout.carousel)
     msg.attachments([
         new builder.HeroCard(session)
-            .title("30_MBPS Plan")
-            .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Plan30Mbps.png')])
+            // .title("Plan")
+            .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/maxis_offer.png')])
             .buttons([
                 builder.CardAction.imBack(session, "Signup now", "Signup")
             ])
     ]);
     session.send(msg).endDialog();
 });
-
 
 intents.matches('PlanQuery', [
     function (session, args, next) {
@@ -196,8 +194,7 @@ intents.matches('PlanQuery', [
         matches: /^cancel$|^goodbye$|^exit|^stop|^close/i
         // confirmPrompt: "This will cancel your order. Are you sure?"
     }
-    );;
-;
+    );
 
 intents.matches('SharedLinePlanAdditionQuery', [
     function (session, args, next) {
@@ -213,17 +210,15 @@ intents.matches('SharedLinePlanAdditionQuery', [
             ["Collect from Maxis Store", "Send to my home"],
             { listStyle: builder.ListStyle.button }, { maxRetries: 1 });
     }, function (session, args, next) {
-        builder.Prompts.choice(session,
-            'Can I confirm activation?',
-            ["Yes"],
-            { listStyle: builder.ListStyle.button }, { maxRetries: 1 });
+        builder.Prompts.text(session,
+            'Can I confirm activation?');
     }, function (session, args, next) {
-        if (args.response.entity === 'Yes') {
+        if (args.response === 'yes') {
             //session.beginDialog("lousyspeed");
-            builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
+            builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov).", { maxRetries: 1 });
         } else {
-            //session.beginDialog("lousyspeed");
-            builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
+            session.endConversation();
+            session.beginDialog("lousyspeed");
         }
     }, function (session, args, next) {
         builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxRetries: 1 });
@@ -279,26 +274,35 @@ bot.dialog('help', function (session, args, next) {
         }
     });
 
-// bot.dialog('lousyspeed', [
-//  function (session, args, next) {
-//                              //session.beginDialog("lousyspeed");
-//         builder.Prompts.Text(session, "", { maxRetries: 1 });
+bot.dialog('lousyspeed', [
+    function (session, args, next) {
+        var msg = new builder.Message(session);
+        msg.text("Expected Internet speed based on your location is");
+        msg.attachmentLayout(builder.AttachmentLayout.carousel);
+        msg.attachments([
+            new builder.HeroCard(session)
+                .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/Speedtest.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "Hear it from our Maxperts", "Hear it from our Maxperts"),
+                    builder.CardAction.imBack(session, "Hear it from our customers", "Hear it from our customers"),
+                    builder.CardAction.imBack(session, "Got It!", "Got It!")
 
+                ])
+        ]);
+        builder.Prompts.text(session, msg, { maxRetries: 1 });
+    }, function (session, args, next) {
+        //session.begindialog("lousyspeed");
+        builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxretries: 1 });
 
-//       },function (session, args, next) {
-//                              //session.beginDialog("lousyspeed");
-//         builder.Prompts.time(session, "Suggest a suitable first date option for installation (eg: 7th nov)", { maxRetries: 1 });
-
-
-//       }, function (session, args, next) {
-//         builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxRetries: 1 });
-//     }, function (session, args, next) {
-//         builder.Prompts.choice(session,
-//             'Confirm the dates?',
-//             ["Confirm"],
-//             { listStyle: builder.ListStyle.button }, { maxRetries: 1 });
-//     }, function (session, args) {
-//         session.send("Thank you, your request is registered.");
-//         session.endDialog();
-//     }
-// ]);
+    }, function (session, args, next) {
+        builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxretries: 1 });
+    }, function (session, args, next) {
+        builder.Prompts.choice(session,
+            'confirm the dates?',
+            ["confirm"],
+            { liststyle: builder.liststyle.button }, { maxretries: 1 });
+    }, function (session, args) {
+        session.send("thank you, your request is registered.");
+        session.enddialog();
+    }
+]);
