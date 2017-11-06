@@ -298,11 +298,11 @@ bot.dialog('lousyspeed', [
         builder.Prompts.time(session, "Suggest a suitable alternate date option for installation (eg: 7th nov)", { maxretries: 1 });
     }, function (session, args, next) {
         builder.Prompts.choice(session,
-            'confirm the dates?',
-            ["confirm"],
+            'Confirm the dates?',
+            ["Confirm"],
             { listStyle: builder.ListStyle.button }, { maxretries: 1 });
     }, function (session, args) {
-        session.send("thank you, your request is registered.");
+        session.send("Thank you, your request is registered.");
         session.endDialog();
     }
 ]);
