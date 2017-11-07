@@ -42,8 +42,8 @@ var luisAppId = 'bb5ee332-8ce7-466a-b5d7-46724b99c3b2'; //process.env.LuisAppId;
 var luisAPIKey = '861ce67b4a1a4f1bb28c77b8e6d701e6'; //process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/032779b4-3116-47d2-999f-f7d53f43b7d2?subscription-key=861ce67b4a1a4f1bb28c77b8e6d701e6&spellCheck=true&verbose=true&timezoneOffset=0&q=';
+
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .onDefault((session) => {
@@ -78,7 +78,7 @@ intents.matches('OfferQuery', (session) => {
     msg.attachmentLayout(builder.AttachmentLayout.carousel)
     msg.attachments([
         new builder.HeroCard(session)
-            // .title("Plan")
+            .title("New change demoed")
             .images([builder.CardImage.create(session, 'https://maxisdemoblob.blob.core.windows.net/images/maxis_offer.png')])
             .buttons([
                 builder.CardAction.imBack(session, "Signup now", "Signup")
